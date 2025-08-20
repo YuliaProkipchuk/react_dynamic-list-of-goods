@@ -37,6 +37,12 @@ export const App: React.FC = () => {
     }
   }, [mode]);
 
+  function handleModeChange(newMode: Mode) {
+    if (newMode !== mode) {
+      setMode(newMode);
+    }
+  }
+
   return (
     <div className="App">
       <h1>Dynamic list of Goods</h1>
@@ -44,7 +50,7 @@ export const App: React.FC = () => {
       <button
         type="button"
         data-cy="all-button"
-        onClick={() => setMode(Mode.All)}
+        onClick={() => handleModeChange(Mode.All)}
       >
         Load all goods
       </button>
@@ -52,7 +58,7 @@ export const App: React.FC = () => {
       <button
         type="button"
         data-cy="first-five-button"
-        onClick={() => setMode(Mode.First5)}
+        onClick={() => handleModeChange(Mode.First5)}
       >
         Load 5 first goods
       </button>
@@ -60,7 +66,7 @@ export const App: React.FC = () => {
       <button
         type="button"
         data-cy="red-button"
-        onClick={() => setMode(Mode.Red)}
+        onClick={() => handleModeChange(Mode.Red)}
       >
         Load red goods
       </button>
