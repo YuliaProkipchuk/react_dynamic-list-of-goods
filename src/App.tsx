@@ -14,21 +14,34 @@ enum Mode {
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[]>([]);
   const [mode, setMode] = useState<Mode>(Mode.None);
+  const [fetchError, setFetchError] = useState('');
 
   useEffect(() => {
+    async function fetchData(callback: () => Promise<Good[]>) {
+      try {
+        const data = await callback();
+
+        setGoods(data);
+      } catch (error) {
+        if (error instanceof Error) {
+          setFetchError('Failed to load goods.');
+        }
+      }
+    }
+
     switch (mode) {
       case Mode.All: {
-        getAll().then((data: Good[]) => setGoods(data));
+        fetchData(getAll);
         break;
       }
 
       case Mode.First5: {
-        get5First().then((data: Good[]) => setGoods(data));
+        fetchData(get5First);
         break;
       }
 
       case Mode.Red: {
-        getRedGoods().then((data: Good[]) => setGoods(data));
+        fetchData(getRedGoods);
         break;
       }
 
@@ -71,7 +84,8 @@ export const App: React.FC = () => {
         Load red goods
       </button>
 
-      <GoodsList goods={goods} />
+      {fetchError && <p className="has-text-danger">{fetchError}</p>}
+      {!fetchError && <GoodsList goods={goods} />}
     </div>
   );
 };
